@@ -1,0 +1,266 @@
+.signin {
+  --espresso: #241712;
+  --espresso-line: rgba(250, 246, 238, 0.12);
+  --crema: #d9a94e;
+  --crema-dim: rgba(217, 169, 78, 0.35);
+  --paper: #efe6d3;
+  --paper-shade: #e3d7bd;
+  --ink: #2e1d14;
+  --ink-soft: rgba(46, 29, 20, 0.62);
+  --steam: #faf6ee;
+  --roast: #b23b2e;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr);
+  min-height: 100vh;
+  font-family: "Inter", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+/* ---------- Hero / dark panel ---------- */
+
+.signin-hero {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--espresso);
+  color: var(--steam);
+  padding: clamp(2rem, 6vw, 5.5rem);
+}
+
+.signin-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 30rem;
+}
+
+.signin-eyebrow {
+  display: inline-block;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--crema);
+  margin-bottom: 1.5rem;
+}
+
+.signin-headline {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(2.4rem, 5vw, 3.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0 0 1.25rem;
+}
+
+.signin-subhead {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: rgba(250, 246, 238, 0.72);
+  max-width: 26rem;
+  margin: 0;
+}
+
+.grading-field {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  align-content: center;
+  gap: clamp(0.9rem, 2vw, 1.6rem) clamp(0.7rem, 1.6vw, 1.3rem);
+  padding: clamp(2rem, 6vw, 5.5rem);
+  opacity: 0.55;
+  mask-image: linear-gradient(to right, transparent, black 38%, black 78%, transparent);
+}
+
+.grading-dot {
+  width: clamp(6px, 0.9vw, 10px);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  border: 1.5px solid rgba(250, 246, 238, 0.22);
+  justify-self: center;
+  animation: grading-fill 4s ease-in-out infinite;
+}
+
+@keyframes grading-fill {
+  0%,
+  88% {
+    background: transparent;
+    border-color: rgba(250, 246, 238, 0.22);
+  }
+  94% {
+    background: var(--crema);
+    border-color: var(--crema);
+  }
+  100% {
+    background: transparent;
+    border-color: rgba(250, 246, 238, 0.22);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grading-dot {
+    animation: none;
+  }
+  .grading-dot:nth-child(3n + 1) {
+    background: var(--crema);
+    border-color: var(--crema);
+  }
+}
+
+/* ---------- Sign-in panel / card ---------- */
+
+.signin-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: var(--paper);
+}
+
+.signin-card {
+  width: 100%;
+  max-width: 21rem;
+  background: var(--steam);
+  border: 1px solid var(--paper-shade);
+  border-radius: 10px;
+  box-shadow: 0 24px 48px -24px rgba(36, 23, 18, 0.35);
+  overflow: hidden;
+}
+
+.signin-card-stub {
+  position: relative;
+  padding: 0.9rem 1.5rem;
+  background: var(--paper-shade);
+  border-bottom: 1.5px dashed rgba(46, 29, 20, 0.28);
+}
+
+.signin-card-stub::before,
+.signin-card-stub::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--paper);
+}
+
+.signin-card-stub::before {
+  left: -7px;
+}
+
+.signin-card-stub::after {
+  right: -7px;
+}
+
+.signin-card-tag {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.signin-card-body {
+  padding: 1.75rem 1.5rem 1.5rem;
+}
+
+.signin-card-title {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin: 0 0 1.25rem;
+  color: var(--ink);
+}
+
+.signin-google-slot {
+  min-height: 44px;
+  display: flex;
+}
+
+.signin-google-slot[data-empty="true"] {
+  border-radius: 999px;
+  background: rgba(46, 29, 20, 0.06);
+}
+
+.signin-hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.signin-hint-mono {
+  font-family: "IBM Plex Mono", monospace;
+  letter-spacing: 0.02em;
+}
+
+.signin-error {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--roast);
+}
+
+.signin-footnote {
+  margin: 1.5rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.signin-success {
+  padding: 0.75rem 0 0.25rem;
+}
+
+.signin-success-name {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 0.15rem;
+}
+
+.signin-success-role {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--crema);
+  background: var(--espresso);
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+}
+
+/* ---------- Focus ---------- */
+
+.signin :focus-visible {
+  outline: 2px solid var(--crema);
+  outline-offset: 2px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 860px) {
+  .signin {
+    grid-template-columns: 1fr;
+  }
+
+  .signin-hero {
+    padding: 2.5rem 1.5rem 3rem;
+    min-height: 0;
+  }
+
+  .grading-field {
+    display: none;
+  }
+
+  .signin-panel {
+    padding: 0 1.5rem 3rem;
+  }
+}

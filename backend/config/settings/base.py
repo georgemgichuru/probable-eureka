@@ -5,6 +5,7 @@ Configuration follows the Twelve-Factor App methodology: every environment-speci
 value is read from the environment (see ``.env.example``). Do not hard-code secrets here.
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -95,6 +96,11 @@ DATABASES["default"]["CONN_MAX_AGE"] = env.int("DB_CONN_MAX_AGE", default=60)
 # Set before the first migration; changing it later is very costly.
 AUTH_USER_MODEL = "users.User"
 
+# --- Google OAuth -----------------------------------------------------------
+# The web client ID from Google Cloud Console. Google ID tokens are verified against
+# this as the expected audience.
+GOOGLE_OAUTH_CLIENT_ID = env("GOOGLE_OAUTH_CLIENT_ID", default="")
+
 # --- Cache & Celery (Redis) ----------------------------------------------
 REDIS_URL = env("REDIS_URL", default="redis://localhost:6379")
 
@@ -149,6 +155,20 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 50,
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+}
+
+# --- SimpleJWT --------------------------------------------------------------
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "UPDATE_LAST_LOGIN": True,
 }
 
 # --- CORS -----------------------------------------------------------------
