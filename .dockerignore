@@ -1,0 +1,13 @@
+.git/
+.gitignore
+**/__pycache__/
+**/*.py[cod]
+**/node_modules/
+frontend/dist/
+frontend/dev-dist/
+backend/staticfiles/
+backend/media/
+.env
+.env.*
+!.env.example
+*.md
