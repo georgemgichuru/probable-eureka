@@ -1,0 +1,35 @@
+/* Art Caffe design tokens, promoted app-wide. SignIn.css re-declares the same
+   values scoped to .signin; keep the two in sync when the palette changes. */
+
+:root {
+  --espresso: #241712;
+  --espresso-line: rgba(250, 246, 238, 0.12);
+  --crema: #d9a94e;
+  --crema-dim: rgba(217, 169, 78, 0.35);
+  --paper: #efe6d3;
+  --paper-shade: #e3d7bd;
+  --ink: #2e1d14;
+  --ink-soft: rgba(46, 29, 20, 0.62);
+  --steam: #faf6ee;
+  --roast: #b23b2e;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+:focus-visible {
+  outline: 2px solid var(--crema);
+  outline-offset: 2px;
+}

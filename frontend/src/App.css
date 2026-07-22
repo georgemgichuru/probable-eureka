@@ -1,0 +1,216 @@
+/* App shell: espresso bar over paper. */
+
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+}
+
+.shell-bar {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.85rem clamp(1rem, 4vw, 2.5rem);
+  background: var(--espresso);
+  color: var(--steam);
+  border-bottom: 3px solid var(--crema);
+}
+
+.shell-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.shell-wordmark {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+}
+
+.shell-wordmark-sub {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--crema);
+}
+
+.shell-nav {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.shell-nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(250, 246, 238, 0.65);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.4rem 0.6rem 0.3rem;
+  cursor: pointer;
+}
+
+.shell-nav-link:hover {
+  color: var(--steam);
+}
+
+.shell-nav-link[aria-current="page"] {
+  color: var(--crema);
+  border-bottom-color: var(--crema);
+}
+
+.shell-user {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.shell-user-email {
+  font-size: 0.8rem;
+  color: rgba(250, 246, 238, 0.72);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shell-user-role {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--espresso);
+  background: var(--crema);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.shell-signout {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: rgba(250, 246, 238, 0.65);
+  background: none;
+  border: 1px solid var(--espresso-line);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.shell-signout:hover {
+  color: var(--steam);
+  border-color: rgba(250, 246, 238, 0.4);
+}
+
+.shell-main {
+  flex: 1;
+  width: 100%;
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2.5rem) 4rem;
+}
+
+/* ---------- Fallback pages (crash boundary, not found) ---------- */
+
+.fallback {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: var(--paper);
+}
+
+.fallback-card {
+  max-width: 24rem;
+  text-align: center;
+  background: var(--steam);
+  border: 1px solid var(--paper-shade);
+  border-radius: 10px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 24px 48px -24px rgba(36, 23, 18, 0.35);
+}
+
+.fallback-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 1rem;
+}
+
+.fallback-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.6rem;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.6rem;
+  color: var(--ink);
+}
+
+.fallback-note {
+  margin: 0 0 1.5rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* ---------- Shared buttons ---------- */
+
+.btn-primary {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--crema);
+  background: var(--espresso);
+  border: none;
+  border-radius: 999px;
+  padding: 0.7rem 1.4rem;
+  cursor: pointer;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btn-quiet {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  background: none;
+  border: 1px solid rgba(46, 29, 20, 0.25);
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  cursor: pointer;
+}
+
+.btn-quiet:hover {
+  color: var(--ink);
+}
+
+@media (max-width: 640px) {
+  .shell-bar {
+    flex-wrap: wrap;
+  }
+
+  .shell-user {
+    width: 100%;
+  }
+
+  .shell-user-email {
+    margin-right: auto;
+  }
+}

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { GoogleLoginError, googleLogin, type AuthUser } from "../api";
+import { friendlyMessage, googleLogin, type AuthUser } from "../api";
+import { useAuth } from "../auth";
 import "./SignIn.css";
 
 declare global {
@@ -55,6 +56,7 @@ function GradingField() {
 }
 
 export default function SignIn() {
+  const { signIn } = useAuth();
   const [status, setStatus] = useState<Status>({ state: "loading-script" });
   const buttonSlotRef = useRef<HTMLDivElement>(null);
 
@@ -73,18 +75,21 @@ export default function SignIn() {
       setStatus({ state: "verifying" });
       try {
         const result = await googleLogin(response.credential);
-        if (!cancelled) setStatus({ state: "signed-in", user: result.user });
+        if (!cancelled) {
+          setStatus({ state: "signed-in", user: result.user });
+          // Persists tokens and flips the app to the signed-in shell.
+          signIn(result);
+        }
       } catch (err) {
-        // Surface what the server actually said — a swallowed error here is the
-        // difference between "misconfigured client ID" and "account rejected".
-        console.error("Google sign-in failed:", err);
+        // The real cause (misconfigured client ID, rejected account, 5xx) goes
+        // to the console via friendlyMessage; the user sees calm copy only.
         if (!cancelled) {
           setStatus({
             state: "error",
-            message:
-              err instanceof GoogleLoginError
-                ? err.message
-                : "Sign-in failed. Please try again.",
+            message: friendlyMessage(
+              err,
+              "We couldn't sign you in just now. Give it another try in a moment.",
+            ),
           });
         }
       }

@@ -1,0 +1,276 @@
+/* HR side: a quiet two-pane desk — exams on the left, the selected exam's
+   details and examinee roster on the right. */
+
+.desk-head {
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.desk-eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 0.6rem;
+}
+
+.desk-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5rem;
+}
+
+.desk-lede {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  max-width: 34rem;
+}
+
+.desk-hint {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin: 0.5rem 0 0;
+}
+
+.desk-error {
+  color: var(--roast);
+  line-height: 1.5;
+}
+
+.desk-error p {
+  margin: 0 0 0.75rem;
+}
+
+/* ---------- Panes ---------- */
+
+.desk-panes {
+  display: grid;
+  grid-template-columns: minmax(15rem, 1fr) minmax(0, 1.8fr);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+/* ---------- Left: list + new exam ---------- */
+
+.desk-new {
+  margin-bottom: 1.25rem;
+}
+
+.desk-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 0.45rem;
+}
+
+.desk-new-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.desk-input {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: var(--steam);
+  border: 1px solid var(--paper-shade);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+}
+
+.desk-input::placeholder {
+  color: rgba(46, 29, 20, 0.4);
+}
+
+.desk-textarea {
+  width: 100%;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.desk-field-error {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--roast);
+}
+
+.desk-list-empty {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0.75rem 0 0;
+}
+
+.desk-exam-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--paper-shade);
+}
+
+.desk-exam-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--paper-shade);
+  border-left: 3px solid transparent;
+  padding: 0.75rem 0.6rem;
+  cursor: pointer;
+}
+
+.desk-exam-row:hover {
+  background: rgba(46, 29, 20, 0.04);
+}
+
+.desk-exam-row[aria-current="true"] {
+  border-left-color: var(--crema);
+  background: var(--steam);
+  font-weight: 600;
+}
+
+.desk-exam-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desk-exam-retired {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--roast);
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  padding: 0.1rem 0.35rem;
+  flex-shrink: 0;
+}
+
+/* ---------- Right: detail ---------- */
+
+.desk-detail {
+  background: var(--steam);
+  border: 1px solid var(--paper-shade);
+  border-radius: 10px;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.desk-detail-empty {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.desk-detail-empty p {
+  margin: 0;
+}
+
+.desk-detail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.desk-detail-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.desk-retired-note {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--roast);
+  margin: 0 0 1rem;
+}
+
+/* ---------- Roster ---------- */
+
+.desk-roster-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ink-soft);
+  margin: 1.75rem 0 0.6rem;
+}
+
+.desk-roster {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+
+.desk-roster-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.2rem;
+  border-bottom: 1px dashed rgba(46, 29, 20, 0.18);
+}
+
+.desk-roster-email {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desk-roster-remove {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0.35rem;
+  flex-shrink: 0;
+}
+
+.desk-roster-remove:hover {
+  color: var(--roast);
+}
+
+/* ---------- Buttons ---------- */
+
+.btn-compact {
+  padding: 0.55rem 1.1rem;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 760px) {
+  .desk-panes {
+    grid-template-columns: 1fr;
+  }
+}
