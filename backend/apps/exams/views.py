@@ -3,7 +3,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.users.permissions import IsExaminer
+from apps.users.permissions import IsEmployee, IsExaminer
 
 from .models import ExamAssignment, ExamType
 from .serializers import (
@@ -60,13 +60,14 @@ class ExamAssignmentDeleteView(generics.DestroyAPIView):
         return ExamAssignment.objects.filter(exam_type_id=self.kwargs["pk"])
 
 
-# --- Employee endpoints (default IsAuthenticated) ---
+# --- Employee endpoints (HR staff run exams, they don't sit them) ---
 
 
 class MyExamTypeListView(generics.ListAPIView):
     """Exam types assigned to the signed-in user's email."""
 
     serializer_class = ExamTypeEmployeeSerializer
+    permission_classes = [IsEmployee]
 
     def get_queryset(self):
         return assigned_exam_types_for(self.request.user)
@@ -75,6 +76,8 @@ class MyExamTypeListView(generics.ListAPIView):
 class ExamSessionStartView(APIView):
     """Enter the selected exam. The "did you pick the right exam?" warning is a
     frontend concern; this endpoint just records the session."""
+
+    permission_classes = [IsEmployee]
 
     def post(self, request, pk):
         session, created = start_exam_session(request.user, pk)

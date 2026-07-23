@@ -12,6 +12,7 @@ import {
 import {
   clearStoredAuth,
   loadStoredAuth,
+  logout,
   saveStoredAuth,
   setAuthExpiredHandler,
   type AuthUser,
@@ -35,6 +36,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signOut = useCallback(() => {
+    // Revoke the refresh token server-side (best effort — never blocks the
+    // local sign-out), then drop the session immediately.
+    void logout();
     clearStoredAuth();
     setUser(null);
   }, []);

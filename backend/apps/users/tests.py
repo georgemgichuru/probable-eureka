@@ -104,6 +104,40 @@ def test_me_returns_current_user():
 
 
 @pytest.mark.django_db
+def test_logout_blacklists_refresh_token(mock_google):
+    mock_google()
+    client = APIClient()
+    tokens = client.post(reverse("users:google-login"), {"id_token": "fake"}).json()
+
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {tokens['access']}")
+    response = client.post(reverse("users:logout"), {"refresh": tokens["refresh"]})
+    assert response.status_code == 204
+
+    # The blacklisted refresh token can no longer mint access tokens.
+    refresh_response = APIClient().post(
+        reverse("users:token-refresh"), {"refresh": tokens["refresh"]}
+    )
+    assert refresh_response.status_code == 401
+
+
+@pytest.mark.django_db
+def test_logout_requires_authentication():
+    response = APIClient().post(reverse("users:logout"), {"refresh": "whatever"})
+    assert response.status_code == 401
+
+
+@pytest.mark.django_db
+def test_logout_with_garbage_refresh_token_still_succeeds():
+    user = User.objects.create(username="employee@example.com", email="employee@example.com")
+    client = APIClient()
+    client.force_authenticate(user=user)
+
+    response = client.post(reverse("users:logout"), {"refresh": "not-a-token"})
+
+    assert response.status_code == 204
+
+
+@pytest.mark.django_db
 def test_user_list_forbidden_for_employee():
     user = User.objects.create(username="employee@example.com", email="employee@example.com")
     client = APIClient()
@@ -125,6 +159,40 @@ def test_user_list_allowed_for_admin():
     response = client.get(reverse("users:user-list"))
 
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_email_suggestions_forbidden_for_employee():
+    user = User.objects.create(username="employee@example.com", email="employee@example.com")
+    client = APIClient()
+    client.force_authenticate(user=user)
+
+    response = client.get(reverse("users:email-suggestions"))
+
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_email_suggestions_match_employees_only():
+    examiner = User.objects.create(
+        username="hr@example.com", email="hr@example.com", role=User.Role.EXAMINER
+    )
+    User.objects.create(username="ann@example.com", email="ann@example.com")
+    User.objects.create(username="anders@example.com", email="anders@example.com")
+    User.objects.create(username="bob@example.com", email="bob@example.com")
+    # Same prefix but HR — must not be suggested as an examinee.
+    User.objects.create(
+        username="anna.admin@example.com",
+        email="anna.admin@example.com",
+        role=User.Role.ADMIN,
+    )
+    client = APIClient()
+    client.force_authenticate(user=examiner)
+
+    response = client.get(reverse("users:email-suggestions"), {"q": "an"})
+
+    assert response.status_code == 200
+    assert response.json() == ["anders@example.com", "ann@example.com"]
 
 
 @pytest.mark.django_db

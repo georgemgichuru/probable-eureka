@@ -56,14 +56,10 @@ function NotFound({ onHome }: { onHome: () => void }) {
   );
 }
 
-type View = "desk" | "mine";
-
 function Shell() {
   const { user, signOut } = useAuth();
-  // Admins and examiners run the exam desk; they can still flip to their own
-  // assigned exams (HR staff get examined too).
+  // Admins and examiners run the exam desk; only employees sit exams.
   const isHr = user!.role !== "employee";
-  const [view, setView] = useState<View>(isHr ? "desk" : "mine");
 
   return (
     <div className="shell">
@@ -72,27 +68,6 @@ function Shell() {
           <span className="shell-wordmark">Art Caffe</span>
           <span className="shell-wordmark-sub">Examinations</span>
         </div>
-
-        {isHr && (
-          <nav className="shell-nav" aria-label="Workspace">
-            <button
-              type="button"
-              className="shell-nav-link"
-              aria-current={view === "desk" ? "page" : undefined}
-              onClick={() => setView("desk")}
-            >
-              Exam desk
-            </button>
-            <button
-              type="button"
-              className="shell-nav-link"
-              aria-current={view === "mine" ? "page" : undefined}
-              onClick={() => setView("mine")}
-            >
-              My exams
-            </button>
-          </nav>
-        )}
 
         <div className="shell-user">
           <span className="shell-user-email">{user!.email}</span>
@@ -103,9 +78,7 @@ function Shell() {
         </div>
       </header>
 
-      <main className="shell-main">
-        {isHr && view === "desk" ? <ExamDesk /> : <MyExams />}
-      </main>
+      <main className="shell-main">{isHr ? <ExamDesk /> : <MyExams />}</main>
     </div>
   );
 }

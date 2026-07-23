@@ -64,6 +64,34 @@ def test_employee_cannot_manage_exam_types(employee_user, barista_exam):
     )
 
 
+@pytest.mark.django_db
+def test_hr_can_delete_exam_type(hr_user, barista_exam):
+    response = client_for(hr_user).delete(reverse("exams:type-detail", args=[barista_exam.pk]))
+
+    assert response.status_code == 204
+    assert not ExamType.objects.filter(pk=barista_exam.pk).exists()
+
+
+@pytest.mark.django_db
+def test_employee_cannot_delete_exam_type(employee_user, barista_exam):
+    response = client_for(employee_user).delete(
+        reverse("exams:type-detail", args=[barista_exam.pk])
+    )
+
+    assert response.status_code == 403
+    assert ExamType.objects.filter(pk=barista_exam.pk).exists()
+
+
+@pytest.mark.django_db
+def test_hr_cannot_take_exams(hr_user, barista_exam):
+    ExamAssignment.objects.create(exam_type=barista_exam, email="hr@example.com")
+    client = client_for(hr_user)
+
+    assert client.get(reverse("exams:my-exams")).status_code == 403
+    assert client.post(reverse("exams:exam-start", args=[barista_exam.pk])).status_code == 403
+    assert not ExamSession.objects.exists()
+
+
 # --- Assignments ---
 
 

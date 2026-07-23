@@ -190,6 +190,13 @@
   margin-bottom: 1rem;
 }
 
+.desk-detail-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
 .desk-detail-name {
   font-family: var(--font-display);
   font-weight: 600;
@@ -257,6 +264,48 @@
 
 .desk-roster-remove:hover {
   color: var(--roast);
+}
+
+/* ---------- Email autocomplete ---------- */
+
+.desk-autocomplete {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+
+.desk-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem;
+  background: var(--paper, #fff);
+  border: 1px solid var(--paper-shade);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(46, 29, 20, 0.14);
+  max-height: 14rem;
+  overflow-y: auto;
+}
+
+.desk-suggestion {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink);
+  padding: 0.5rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desk-suggestion.is-active {
+  background: var(--steam);
 }
 
 /* ---------- Buttons ---------- */

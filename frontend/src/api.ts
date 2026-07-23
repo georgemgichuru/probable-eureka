@@ -203,6 +203,42 @@ export async function googleLogin(idToken: string): Promise<GoogleLoginResponse>
   return (await res.json()) as GoogleLoginResponse;
 }
 
+/**
+ * Best-effort server-side sign-out: blacklists the refresh token so the
+ * session can't be revived. Tokens are captured up front so this keeps
+ * working after the caller clears local storage; failures are only logged
+ * because the caller drops the local session regardless.
+ */
+export async function logout(): Promise<void> {
+  const stored = loadStoredAuth();
+  if (!stored) return;
+
+  const send = (access: string, refresh: string) =>
+    fetch(`${API_BASE}/auth/logout/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${access}` },
+      body: JSON.stringify({ refresh }),
+    });
+
+  try {
+    const res = await send(stored.access, stored.refresh);
+    if (res.status !== 401) return;
+
+    // Access token expired: mint a fresh pair with the refresh token, then
+    // revoke that pair (rotation already blacklisted the original refresh).
+    const refreshRes = await fetch(`${API_BASE}/auth/refresh/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh: stored.refresh }),
+    });
+    if (!refreshRes.ok) return; // Refresh token already dead — nothing to revoke.
+    const body = (await refreshRes.json()) as { access: string; refresh?: string };
+    await send(body.access, body.refresh ?? stored.refresh);
+  } catch (err) {
+    console.error("Logout request failed; local session cleared anyway.", err);
+  }
+}
+
 // ---------- Exam types ----------
 
 interface Paginated<T> {
@@ -257,6 +293,10 @@ export function updateExamType(
   return request(`/exams/types/${id}/`, { method: "PATCH", body: data });
 }
 
+export function deleteExamType(id: number): Promise<void> {
+  return request(`/exams/types/${id}/`, { method: "DELETE" });
+}
+
 export async function listAssignments(examTypeId: number): Promise<ExamAssignment[]> {
   return (await request<Paginated<ExamAssignment>>(`/exams/types/${examTypeId}/assignments/`))
     .results;
@@ -267,6 +307,11 @@ export function addAssignment(examTypeId: number, email: string): Promise<ExamAs
     method: "POST",
     body: { email },
   });
+}
+
+/** Employee emails matching `query`, for the examinee autocomplete. */
+export function suggestEmails(query: string): Promise<string[]> {
+  return request(`/users/emails/?q=${encodeURIComponent(query)}`);
 }
 
 export function removeAssignment(examTypeId: number, assignmentId: number): Promise<void> {

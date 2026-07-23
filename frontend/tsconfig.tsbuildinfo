@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/errorboundary.tsx","./src/api.ts","./src/auth.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/pages/examdesk.tsx","./src/pages/myexams.tsx","./src/pages/signin.tsx"],"errors":true,"version":"5.9.3"}

@@ -12,6 +12,17 @@ class IsAdmin(BasePermission):
         )
 
 
+class IsEmployee(BasePermission):
+    """Employees only — HR staff (examiners/admins) run exams, they don't sit them."""
+
+    def has_permission(self, request, view) -> bool:
+        return bool(
+            request.user
+            and request.user.is_authenticated
+            and request.user.role == User.Role.EMPLOYEE
+        )
+
+
 class IsExaminer(BasePermission):
     """Examiners and admins (admins outrank examiners everywhere)."""
 

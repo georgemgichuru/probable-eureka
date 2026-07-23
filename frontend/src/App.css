@@ -201,6 +201,33 @@
   color: var(--ink);
 }
 
+.btn-quiet:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btn-danger {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: #9c2b1f;
+  background: none;
+  border: 1px solid rgba(156, 43, 31, 0.4);
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  color: #7c1f15;
+  border-color: rgba(156, 43, 31, 0.65);
+}
+
+.btn-danger:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 @media (max-width: 640px) {
   .shell-bar {
     flex-wrap: wrap;

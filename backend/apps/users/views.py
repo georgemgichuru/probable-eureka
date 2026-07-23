@@ -2,11 +2,17 @@ from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
-from .permissions import IsAdmin
-from .serializers import GoogleAuthSerializer, RoleUpdateSerializer, UserSerializer
+from .permissions import IsAdmin, IsExaminer
+from .serializers import (
+    GoogleAuthSerializer,
+    LogoutSerializer,
+    RoleUpdateSerializer,
+    UserSerializer,
+)
 from .services import get_or_create_user_from_google, verify_google_id_token
 
 
@@ -33,6 +39,23 @@ class GoogleLoginView(APIView):
         )
 
 
+class LogoutView(APIView):
+    """Blacklist the caller's refresh token so the session can't be revived."""
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = LogoutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        try:
+            RefreshToken(serializer.validated_data["refresh"]).blacklist()
+        except TokenError:
+            # Already expired or blacklisted — the goal (a dead session) is met.
+            pass
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class MeView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -44,6 +67,23 @@ class UserListView(generics.ListAPIView):
     queryset = User.objects.all().order_by("email")
     serializer_class = UserSerializer
     permission_classes = [IsAdmin]
+
+
+class EmailSuggestionView(APIView):
+    """Autocomplete for the exam roster: employee emails matching ``?q=``.
+
+    Open to examiners (not just admins) because they build rosters too; scoped
+    to employees since HR staff never sit exams.
+    """
+
+    permission_classes = [IsExaminer]
+
+    def get(self, request):
+        query = request.query_params.get("q", "").strip()
+        emails = User.objects.filter(role=User.Role.EMPLOYEE)
+        if query:
+            emails = emails.filter(email__icontains=query)
+        return Response(list(emails.order_by("email").values_list("email", flat=True)[:10]))
 
 
 class UserRoleUpdateView(APIView):

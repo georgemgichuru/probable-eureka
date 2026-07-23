@@ -16,3 +16,7 @@ class GoogleAuthSerializer(serializers.Serializer):
 
 class RoleUpdateSerializer(serializers.Serializer):
     role = serializers.ChoiceField(choices=User.Role.choices)
+
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
